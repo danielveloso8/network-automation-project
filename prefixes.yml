@@ -1,0 +1,131 @@
+# Plano de Endereçamento IPv4 Completo
+prefixes:
+  # ==========================================
+  # OFFICE A - Infraestrutura e Gestão
+  # ==========================================
+  - prefix: "10.0.0.0/28"
+    site: "Office A"
+    vlan_vid: 99
+    description: "Mgmt A (VLAN 99)"
+
+  - prefix: "203.0.113.0/30"
+    site: "Office A"
+    description: "R1 <> ISPA"
+
+  - prefix: "203.0.113.4/30"
+    site: "Office A"
+    description: "R1 <> ISPB"
+
+  - prefix: "10.0.0.32/30"
+    site: "Office A"
+    description: "R1 <> CSW1"
+
+  - prefix: "10.0.0.36/30"
+    site: "Office A"
+    description: "R1 <> CSW2"
+
+  - prefix: "10.0.0.40/30"
+    site: "Office A"
+    description: "CSW1 <> CSW2"
+
+  - prefix: "10.0.0.44/30"
+    site: "Office A"
+    description: "CSW1 <> DSW-A1"
+
+  - prefix: "10.0.0.48/30"
+    site: "Office A"
+    description: "CSW1 <> DSW-A2"
+
+  - prefix: "10.0.0.60/30"
+    site: "Office A"
+    description: "CSW2 <> DSW-A1"
+
+  - prefix: "10.0.0.64/30"
+    site: "Office A"
+    description: "CSW2 <> DSW-A2"
+
+  # Office A - Loopbacks
+  - prefix: "10.0.0.76/32"
+    site: "Office A"
+    description: "R1 L0"
+
+  - prefix: "10.0.0.77/32"
+    site: "Office A"
+    description: "CSW1 L0"
+
+  - prefix: "10.0.0.78/32"
+    site: "Office A"
+    description: "CSW2 L0"
+
+  - prefix: "10.0.0.79/32"
+    site: "Office A"
+    description: "DSW-A1 L0"
+
+  - prefix: "10.0.0.80/32"
+    site: "Office A"
+    description: "DSW-A2 L0"
+
+  # Office A - VLANs de Utilizadores
+  - prefix: "10.1.0.0/24"
+    site: "Office A"
+    vlan_vid: 10
+    description: "PCs A (VLAN 10)"
+
+  - prefix: "10.2.0.0/24"
+    site: "Office A"
+    vlan_vid: 20
+    description: "Phones A (VLAN 20)"
+
+  - prefix: "10.6.0.0/24"
+    site: "Office A"
+    vlan_vid: 40
+    description: "Wi-Fi A (VLAN 40)"
+
+  # ==========================================
+  # OFFICE B - Infraestrutura e Gestão
+  # ==========================================
+  - prefix: "10.0.0.16/28"
+    site: "Office B"
+    vlan_vid: 99
+    description: "Mgmt B (VLAN 99)"
+
+  - prefix: "10.0.0.52/30"
+    site: "Office B"
+    description: "CSW1 <> DSW-B1"
+
+  - prefix: "10.0.0.56/30"
+    site: "Office B"
+    description: "CSW1 <> DSW-B2"
+
+  - prefix: "10.0.0.68/30"
+    site: "Office B"
+    description: "CSW2 <> DSW-B1"
+
+  - prefix: "10.0.0.72/30"
+    site: "Office B"
+    description: "CSW2 <> DSW-B2"
+
+  # Office B - Loopbacks
+  - prefix: "10.0.0.81/32"
+    site: "Office B"
+    description: "DSW-B1 L0"
+
+  - prefix: "10.0.0.82/32"
+    site: "Office B"
+    description: "DSW-B2 L0"
+
+  # Office B - VLANs de Utilizadores e Servidores
+  - prefix: "10.3.0.0/24"
+    site: "Office B"
+    vlan_vid: 10
+    description: "PCs B (VLAN 10)"
+
+  - prefix: "10.4.0.0/24"
+    site: "Office B"
+    vlan_vid: 20
+    description: "Phones B (VLAN 20)"
+
+  - prefix: "10.5.0.0/24"
+    site: "Office B"
+    vlan_vid: 30
+    description: "Servers (VLAN 30)"

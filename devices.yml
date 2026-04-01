@@ -1,0 +1,143 @@
+# Inventário de Dispositivos - Projeto Automação CCNA
+devices:
+  # ==========================================
+  # OFFICE A - Sede
+  # ==========================================
+  
+  # Core & Edge Layer
+  - name: "R1"
+    role: "Edge Router"
+    model: "ISR4331"
+    site: "Office A"
+
+  - name: "CSW1"
+    role: "Core Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  - name: "CSW2"
+    role: "Core Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  # Distribution Layer
+  - name: "DSW-A1"
+    role: "Distribution Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  - name: "DSW-A2"
+    role: "Distribution Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  # Access Layer
+  - name: "ASW-A1"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  - name: "ASW-A2"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  - name: "ASW-A3"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office A"
+
+  # Wireless Infrastructure
+  - name: "WLC1"
+    role: "Wireless Controller"
+    model: "C9800-CL"
+    site: "Office A"
+
+  - name: "LWAP1"
+    role: "Access Point"
+    model: "C9120AXI"
+    site: "Office A"
+
+  # End Devices & IP Telephony (Office A)
+  - name: "Phone1"
+    role: "IP Phone"
+    model: "CP-7841"
+    site: "Office A"
+
+  - name: "PC1"
+    role: "Workstation"
+    model: "Desktop PC"
+    site: "Office A"
+
+  - name: "Phone2"
+    role: "IP Phone"
+    model: "CP-7841"
+    site: "Office A"
+
+  - name: "PC2"
+    role: "Workstation"
+    model: "Desktop PC"
+    site: "Office A"
+
+  - name: "Laptop1"
+    role: "Workstation"
+    model: "Laptop"
+    site: "Office A"
+
+  # ==========================================
+  # OFFICE B - Filial
+  # ==========================================
+
+  # Distribution Layer
+  - name: "DSW-B1"
+    role: "Distribution Switch"
+    model: "C9300-24T"
+    site: "Office B"
+
+  - name: "DSW-B2"
+    role: "Distribution Switch"
+    model: "C9300-24T"
+    site: "Office B"
+
+  # Access Layer
+  - name: "ASW-B1"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office B"
+
+  - name: "ASW-B2"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office B"
+
+  - name: "ASW-B3"
+    role: "Access Switch"
+    model: "C9300-24T"
+    site: "Office B"
+
+  # Servers & Wireless (Office B)
+  - name: "SRV1"
+    role: "Server"
+    model: "PowerEdge R740"
+    site: "Office B"
+
+  - name: "LWAP2"
+    role: "Access Point"
+    model: "C9120AXI"
+    site: "Office B"
+
+  # End Devices & IP Telephony (Office B)
+  - name: "Phone3"
+    role: "IP Phone"
+    model: "CP-7841"
+    site: "Office B"
+
+  - name: "PC3"
+    role: "Workstation"
+    model: "Desktop PC"
+    site: "Office B"
+
+  - name: "Laptop2"
+    role: "Workstation"
+    model: "Laptop"
+    site: "Office B"
