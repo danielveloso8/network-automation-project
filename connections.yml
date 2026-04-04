@@ -1,0 +1,67 @@
+# LIGAÇÕES FÍSICAS
+connections:
+  #  WAN (R1 para ISPs)
+  - ["R1", "G0/0/0", "ISPA", "eth1"]
+  - ["R1", "G0/1/0", "ISPB", "eth1"]
+
+  #  CORE (R1 para CSWs) 
+  - ["R1", "G0/0", "CSW1", "G1/0/1"]
+  - ["R1", "G0/1", "CSW2", "G1/0/1"]
+
+  # 
+  - ["CSW1", "G1/0/23", "CSW2", "G1/0/23"]
+  - ["CSW1", "G1/0/24", "CSW2", "G1/0/24"]
+
+  #  OFFICE A (Core para Distribuição)
+  - ["CSW1", "G1/1/1", "DSW-A1", "G1/1/1"]
+  - ["CSW1", "G1/1/2", "DSW-A2", "G1/1/1"]
+  - ["CSW2", "G1/1/1", "DSW-A1", "G1/1/2"]
+  - ["CSW2", "G1/1/2", "DSW-A2", "G1/1/2"]
+
+  #  OFFICE B (Core para Distribuição)
+  - ["CSW1", "G1/1/3", "DSW-B1", "G1/1/1"]
+  - ["CSW1", "G1/1/4", "DSW-B2", "G1/1/1"]
+  - ["CSW2", "G1/1/3", "DSW-B1", "G1/1/2"]
+  - ["CSW2", "G1/1/4", "DSW-B2", "G1/1/2"]
+
+
+virtual_interfaces:
+  # Port-Channels (LAGs)
+  - { device: "CSW1", name: "Po1", type: "lag" }
+  - { device: "CSW2", name: "Po1", type: "lag" }
+
+  # Loopbacks
+  - { device: "R1", name: "Loopback0", type: "virtual" }
+  - { device: "CSW1", name: "Loopback0", type: "virtual" }
+  - { device: "CSW2", name: "Loopback0", type: "virtual" }
+  - { device: "DSW-A1", name: "Loopback0", type: "virtual" }
+  - { device: "DSW-A2", name: "Loopback0", type: "virtual" }
+  - { device: "DSW-B1", name: "Loopback0", type: "virtual" }
+  - { device: "DSW-B2", name: "Loopback0", type: "virtual" }
+
+  # SVIs (VLAN Interfaces para DSWs)
+  - { device: "DSW-A1", name: "Vlan99", type: "virtual" }
+  - { device: "DSW-A1", name: "Vlan10", type: "virtual" }
+  - { device: "DSW-A1", name: "Vlan20", type: "virtual" }
+  - { device: "DSW-A1", name: "Vlan40", type: "virtual" }
+  - { device: "DSW-A2", name: "Vlan99", type: "virtual" }
+  - { device: "DSW-A2", name: "Vlan10", type: "virtual" }
+  - { device: "DSW-A2", name: "Vlan20", type: "virtual" }
+  - { device: "DSW-A2", name: "Vlan40", type: "virtual" }
+  - { device: "DSW-B1", name: "Vlan99", type: "virtual" }
+  - { device: "DSW-B1", name: "Vlan10", type: "virtual" }
+  - { device: "DSW-B1", name: "Vlan20", type: "virtual" }
+  - { device: "DSW-B1", name: "Vlan30", type: "virtual" }
+  - { device: "DSW-B2", name: "Vlan99", type: "virtual" }
+  - { device: "DSW-B2", name: "Vlan10", type: "virtual" }
+  - { device: "DSW-B2", name: "Vlan20", type: "virtual" }
+  - { device: "DSW-B2", name: "Vlan30", type: "virtual" }
+
+  # Gestão nos ASWs e WLC
+  - { device: "ASW-A1", name: "Vlan99", type: "virtual" }
+  - { device: "ASW-A2", name: "Vlan99", type: "virtual" }
+  - { device: "ASW-A3", name: "Vlan99", type: "virtual" }
+  - { device: "ASW-B1", name: "Vlan99", type: "virtual" }
+  - { device: "ASW-B2", name: "Vlan99", type: "virtual" }
+  - { device: "ASW-B3", name: "Vlan99", type: "virtual" }
+  - { device: "WLC1", name: "Vlan99", type: "virtual" }
