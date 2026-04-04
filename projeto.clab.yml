@@ -1,0 +1,122 @@
+name: projeto-ccna
+topology:
+  nodes:
+    ASW-A1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.100
+    ASW-A2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.101
+    ASW-A3:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.102
+    ASW-B1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.103
+    ASW-B2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.104
+    ASW-B3:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.105
+    CSW1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.106
+    CSW2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.107
+    DSW-A1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.108
+    DSW-A2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.109
+    DSW-B1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.110
+    DSW-B2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.111
+    ISPA:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.112
+    ISPB:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.113
+    PC1:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 172.20.20.118
+    PC2:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 172.20.20.119
+    PC3:
+      kind: linux
+      image: alpine:latest
+      mgmt-ipv4: 172.20.20.120
+    R1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.124
+    WLC1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:latest
+      mgmt-ipv4: 172.20.20.126
+  links:
+  - endpoints:
+    - R1:e1-1
+    - CSW1:e1-1
+  - endpoints:
+    - R1:e1-2
+    - CSW2:e1-1
+  - endpoints:
+    - R1:e1-3
+    - ISPA:e1-1
+  - endpoints:
+    - R1:e1-4
+    - ISPB:e1-1
+  - endpoints:
+    - CSW1:e1-2
+    - CSW2:e1-2
+  - endpoints:
+    - CSW1:e1-3
+    - CSW2:e1-3
+  - endpoints:
+    - CSW1:e1-4
+    - DSW-A1:e1-1
+  - endpoints:
+    - CSW1:e1-5
+    - DSW-A2:e1-1
+  - endpoints:
+    - CSW2:e1-4
+    - DSW-A1:e1-2
+  - endpoints:
+    - CSW2:e1-5
+    - DSW-A2:e1-2
+  - endpoints:
+    - CSW1:e1-6
+    - DSW-B1:e1-1
+  - endpoints:
+    - CSW1:e1-7
+    - DSW-B2:e1-1
+  - endpoints:
+    - CSW2:e1-6
+    - DSW-B1:e1-2
+  - endpoints:
+    - CSW2:e1-7
+    - DSW-B2:e1-2
