@@ -141,3 +141,13 @@ devices:
     role: "Workstation"
     model: "Laptop"
     site: "Office B"
+
+  - name: "ISPA"
+    model: "ISR4331"
+    role: "Edge Router"
+    site: "Office A"
+
+  - name: "ISPB"
+    model: "ISR4331"
+    role: "Edge Router"
+    site: "Office A"
