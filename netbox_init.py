@@ -170,6 +170,102 @@ def create_prefixes(prefix_list):
             print(f"Prefixo {p['prefix']} já existe. A saltar...")
 
 
+def import_connections_from_yaml(path):
+    with open(path) as file:
+        data = yaml.safe_load(file)
+
+    for vi in data['virtual_interfaces']:
+        device = nb.dcim.devices.get(name=vi['device'])
+        if device:
+            if not nb.dcim.interfaces.get(device_id=device.id, name=vi['name']):
+                nb.dcim.interfaces.create(
+                    device=device.id,
+                    name=vi['name'],
+                    type=vi['type']
+                )
+                print(f"Interface Virtual {vi['name']} criada em {vi['device']}")
+
+    for conn in data['connections']:
+        dev_a_name, int_a_name, dev_b_name, int_b_name = conn
+
+        dev_a = nb.dcim.devices.get(name=dev_a_name)
+        dev_b = nb.dcim.devices.get(name=dev_b_name)
+
+        if not dev_a or not dev_b:
+            print(f"Erro: Um dos dispositivos não existe.")
+            continue
+
+        def get_or_create_int(device, int_name):
+                interface = nb.dcim.interfaces.get(device_id=device.id, name=int_name)
+                if not interface:
+                    int_type = 'lag' if 'Po' in int_name else '1000base-t'
+                    interface = nb.dcim.interfaces.create(device=device.id, name=int_name, type=int_type)
+                return interface
+
+        if_a = get_or_create_int(dev_a, int_a_name)
+        if_b = get_or_create_int(dev_b, int_b_name)
+
+        if not if_a.cable and not if_b.cable:
+            nb.dcim.cables.create(
+                a_terminations=[{'object_type': 'dcim.interface', 'object_id': if_a.id}],
+                b_terminations=[{'object_type': 'dcim.interface', 'object_id': if_b.id}],
+                status='connected'
+                )
+            print(f"Cabo ligado: {dev_a_name} [{int_a_name}] <---> {dev_b_name} [{int_b_name}]")
+        else:
+            print(f"Ligação {dev_a_name} <-> {dev_b_name} já existe.")
+
+
+def import_ips_from_yaml(filepath):
+    with open(filepath) as file:
+        data = yaml.safe_load(file)
+
+    for entry in data['ips']:
+        device = nb.dcim.devices.get(name=entry['device'])
+        if not device:
+            print(f"Dispositivo {entry['device']} não encontrado.")
+            continue
+
+        interface = nb.dcim.interfaces.get(device_id=device.id, name=entry['interface'])
+        if not interface:
+            print(f"Interface {entry['interface']} não encontrada em {entry['device']}.")
+            continue
+
+        ip_addr = nb.ipam.ip_addresses.get(address=entry['address'])
+
+        if not ip_addr:
+            nb.ipam.ip_addresses.create(
+                address=entry['address'],
+                status='active',
+                assigned_object_type='dcim.interface',
+                assigned_object_id=interface.id
+            )
+            print(f"IP {entry['address']} atribuído a {entry['device']} [{entry['interface']}]")
+        else:
+            print(f"IP {entry['address']} já existe. A saltar...")
+
+
+def import_vips_from_yaml(filepath):
+    with open(filepath) as file:
+        data = yaml.safe_load(file)
+
+    if 'vips' not in data:
+        return
+
+    for vip in data['vips']:
+        ip_obj = nb.ipam.ip_addresses.get(address=vip['address'])
+        
+        if not ip_obj:
+            nb.ipam.ip_addresses.create(
+                address=vip['address'],
+                status='active',
+                role='vip',
+                description=vip['description']
+            )
+            print(f"VIP {vip['address']} ({vip['description']}) criado com sucesso.")
+        else:
+            print(f"VIP {vip['address']} já existe. A saltar...")
+
 
 
 if __name__ == "__main__":
@@ -179,6 +275,9 @@ if __name__ == "__main__":
     create_device_models(device_models)
     import_devices_to_netbox(devices_list)
     create_vlans(vlans)
+    import_connections_from_yaml("connections.yml")
+    import_ips_from_yaml("ips.yml")
+    import_vips_from_yaml("ips.yml")
     if prefixes:
         create_prefixes(prefixes)
 
