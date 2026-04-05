@@ -52,6 +52,7 @@ graph TD
     style NB fill:#f96,stroke:#333
     style CL fill:#69f,stroke:#333
     style V fill:#c8e6c9,stroke:#2e7d32
+```
 
 🛠️ Stack Tecnológica
 Ferramenta	Função
