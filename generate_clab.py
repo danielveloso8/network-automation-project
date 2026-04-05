@@ -1,89 +1,48 @@
-import pynetbox
 import yaml
-import re
 
-NETBOX_URL = "http://localhost:8000"
-NETBOX_TOKEN = "d09g7LUzFUKHmfGu03ckK9GCPQMT9M2Sx9V9uQMo"
-
-nb = pynetbox.api(NETBOX_URL, token=NETBOX_TOKEN)
-
-def generate_containerlab_topology():
-    print("A gerar topologia do Containerlab...")
+def generate_frr_lab():
+    with open("connections.yml", "r") as f:
+        data = yaml.safe_load(f)
     
-    port_counters = {} 
+    connections = data.get('connections', [])
     
-    topology = {
-        "name": "projeto-v2",
+    # 1. Descobrir todos os nós que aparecem nas conexões
+    all_nodes = set()
+    for conn in connections:
+        if len(conn) >= 3:
+            all_nodes.add(conn[0]) # Primeiro nó (ex: R1)
+            all_nodes.add(conn[2]) # Segundo nó (ex: ISPA)
+
+    clab_config = {
+        "name": "projeto-ccna",
         "topology": {
-            "nodes": {},
+            "nodes": {node: {"kind": "linux", "image": "frrouting/frr:latest"} for node in all_nodes},
             "links": []
         }
     }
 
-    kind_mapping = {
-        "ISR4331": "nokia_srlinux",
-        "C9300-24T": "nokia_srlinux",
-        "C9800-CL": "nokia_srlinux",
-        "Desktop PC": "linux"
-    }
+    # 2. Gerar os links (mapeando automaticamente para eth1, eth2...)
+    iface_counters = {}
 
-    all_devices = list(nb.dcim.devices.all())
-    
-# No teu loop de dispositivos em generate_clab.py:
-    for device in all_devices:
-        # FILTRO DE SEGURANÇA: Só R1, Cores e ISPs
-        if device.name not in ["R1", "CSW1", "CSW2", "ISPA", "ISPB"]:
-            continue 
-            
-        kind = kind_mapping.get(device.device_type.model)
-        if kind:
-            mgmt_id = 100 + all_devices.index(device)
-            
-            image_name = "ghcr.io/nokia/srlinux:latest" if kind == "nokia_srlinux" else "alpine:latest"
-            
-            topology["topology"]["nodes"][device.name] = {
-                "kind": kind,
-                "image": image_name,
-                "mgmt-ipv4": f"172.20.20.{mgmt_id}"
-            }
-
-    cables = nb.dcim.cables.all()
-    for cable in cables:
-        if not cable.a_terminations or not cable.b_terminations:
-            continue
-            
-        a_side = cable.a_terminations[0]
-        b_side = cable.b_terminations[0]
-
-        if a_side.object_type == "dcim.interface" and b_side.object_type == "dcim.interface":
-            dev_a = a_side.object.device.name
-            dev_b = b_side.object.device.name
-
-            if dev_a in topology["topology"]["nodes"] and dev_b in topology["topology"]["nodes"]:
-            
-                def get_unique_port(device_name):
-                    if device_name not in port_counters:
-                        port_counters[device_name] = 1
-                
-                    p_num = port_counters[device_name]
-                    port_counters[device_name] += 1
-                
-                    d_obj = nb.dcim.devices.get(name=device_name)
-                    d_kind = kind_mapping.get(d_obj.device_type.model)
-                
-                    if d_kind == "nokia_srlinux":
-                        return f"e1-{p_num}"
-                    return f"eth{p_num}"
-
-                topology["topology"]["links"].append({
-                    "endpoints": [f"{dev_a}:{get_unique_port(dev_a)}", 
-                             f"{dev_b}:{get_unique_port(dev_b)}"]
-                })
+    for conn in connections:
+        if len(conn) < 3: continue
+        
+        node_a, node_b = conn[0], conn[2]
+        
+        iface_counters[node_a] = iface_counters.get(node_a, 0) + 1
+        iface_counters[node_b] = iface_counters.get(node_b, 0) + 1
+        
+        clab_config['topology']['links'].append({
+            "endpoints": [
+                f"{node_a}:eth{iface_counters[node_a]}", 
+                f"{node_b}:eth{iface_counters[node_b]}"
+            ]
+        })
 
     with open("projeto.clab.yml", "w") as f:
-        yaml.dump(topology, f, default_flow_style=False, sort_keys=False)
+        yaml.dump(clab_config, f, default_flow_style=False)
     
-    print("Ficheiro 'projeto.clab.yml' gerado com sucesso e sem duplicados!")
+    print(f"✅ Lab gerado com {len(all_nodes)} dispositivos e {len(clab_config['topology']['links'])} links!")
 
 if __name__ == "__main__":
-    generate_containerlab_topology()
+    generate_frr_lab()
