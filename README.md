@@ -1,8 +1,8 @@
-# 🚀 Network Automation Framework: NetBox + Containerlab + FRR
+# Network Automation Framework: NetBox + Containerlab + FRR
 
-Este projeto demonstra a implementação de uma metodologia **Infrastructure as Code (IaC)** para a automação de infraestruturas de rede. Utiliza o **NetBox** como a única fonte da verdade (*Single Source of Truth*) para gerir o ciclo de vida completo de uma rede virtualizada, desde o aprovisionamento do inventário até à validação de conectividade.
+Este projeto demonstra a implementação de uma metodologia **Infrastructure as Code (IaC)** para a automação de infraestruturas de rede. Utiliza o **NetBox** como a *Single Source of Truth* para gerir o ciclo de vida completo de uma rede virtualizada simulada, desde o inventário até à validação de conectividade.
 
-## 📌 Visão Geral
+## Visão Geral
 A solução resolve o problema de inconsistência de configurações através da automação de quatro pilares:
 1.  **Inventário Dinâmico:** Sincronização automática de dados YAML com a API do NetBox.
 2.  **Orquestração de Topologia:** Geração programática de cenários de laboratório baseados em grafos de conectividade.
@@ -11,7 +11,7 @@ A solução resolve o problema de inconsistência de configurações através da
 
 ---
 
-## 🏗️ Fluxo de Trabalho (Pipeline de Automação)
+## Fluxo de Trabalho (Pipeline de Automação)
 
 O diagrama abaixo ilustra a interação entre as ferramentas e o fluxo de dados no ecossistema:
 
@@ -55,24 +55,23 @@ graph TD
 ```
 
 🛠️ Stack Tecnológica
-Ferramenta	Função
-NetBox	Gestão de IPAM e DCIM (Source of Truth)
-Containerlab	Orquestração de topologias de rede em Docker
-FRRouting (FRR)	Stack de protocolos de routing (OSPF)
-Python 3.x	Core da automação (pynetbox, PyYAML)
-Docker	Virtualização dos nós de rede
+NetBox
+Containerlab
+FRRouting
+Python 3.x
+Docker
 
 📂 Estrutura do Projeto
 
-    netbox_init.py: Inicializa o NetBox com sites, roles, modelos e IPs.
+    - netbox_init.py: Inicializa o NetBox com sites, roles, modelos e IPs.
 
-    generate_clab.py: Gera o ficheiro de topologia projeto.clab.yml.
+    - generate_clab.py: Gera o ficheiro de topologia projeto.clab.yml.
 
-    sync_netbox_lab.py: Sincroniza as configurações de IP e OSPF nos equipamentos ativos.
+    - sync_netbox_lab.py: Sincroniza as configurações de IP e OSPF nos equipamentos ativos.
 
-    verify_network.py: Script de validação de vizinhança OSPF e testes de ICMP.
+    - verify_network.py: Script de validação de vizinhança OSPF e testes de ICMP.
 
-    *.yml: Ficheiros de definição de rede (Inventário, Conexões, Prefixos).
+    - *.yml: Ficheiros de definição de rede (Inventário, Conexões, Prefixos).
 
 🚀 Como Executar
 1. Pré-requisitos
