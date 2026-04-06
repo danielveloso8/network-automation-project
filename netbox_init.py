@@ -10,6 +10,7 @@ if not TOKEN or not NETBOX_URL:
     print("❌ Erro: As variáveis de ambiente NETBOX_URL e NETBOX_TOKEN não estão definidas.")
     sys.exit(1)
 
+# Inicialização da instância da API
 nb = pynetbox.api(NETBOX_URL, token=TOKEN)
 
 """
@@ -18,6 +19,7 @@ Este script é responsável por popular a 'Source of Truth' com a estrutura
 hierárquica de rede, dispositivos e endereçamento IP.
 """
 
+# CONFIGURAÇÕES GLOBAIS
 sites = ["Office A", "Office B"]
 
 roles = [
@@ -27,6 +29,7 @@ roles = [
 
 manufacturer = ["Cisco", "Dell", "Generic"]
 
+# Inventário de modelos
 device_models = [
     {"name": "ISR4331", "manufacturer": "Cisco"}, 
     {"name": "C9300-24T", "manufacturer": "Cisco"},
@@ -38,7 +41,13 @@ device_models = [
     {"name": "Laptop", "manufacturer": "Generic"}
 ]
 
+
+# FUNÇÕES DE CRIAÇÃO
 def create_sites(sites_list):
+    """
+    Cria as localizações físicas no NetBox.
+    O 'slug' é gerado automaticamente para que seja compativel com os URLs da API.
+    """
     for site in sites_list:
         if not nb.dcim.sites.get(name=site):
             nb.dcim.sites.create(name=site, slug=site.lower().replace(" ","-"))
@@ -47,6 +56,7 @@ def create_sites(sites_list):
             print(f"O site {site} já existe. Criação de site ignorada.")
 
 def create_device_roles(roles_list):
+    """Definição das funções dos dispositivos para organização e filtragem no inventário."""
     for role in roles_list:
         if not nb.dcim.device_roles.get(name=role):
             nb.dcim.device_roles.create(name=role, slug=role.lower().replace(" ","-"))
@@ -55,6 +65,7 @@ def create_device_roles(roles_list):
             print(f"A role {role} já existe. Criação de role ignorada.")
 
 def create_manufacturers(manufacturer_list):
+    """Criação da base de fabricantes necessária para conseguir criar Modelos de Dispositivos."""
     for manu in manufacturer_list:
         if not nb.dcim.manufacturers.get(name=manu):
             nb.dcim.manufacturers.create(name=manu, slug=manu.lower().replace(" ","-"))
@@ -63,6 +74,7 @@ def create_manufacturers(manufacturer_list):
             print(f"O fabricante {manu} já existe. Criação de fabricante ignorada.")        
 
 def create_device_models(devmodels_list):
+    """ Criação dos modelos de dispositivos. """
     for model in devmodels_list:
         obj_manufacturer = nb.dcim.manufacturers.get(name=model["manufacturer"])
         if obj_manufacturer:
@@ -80,13 +92,16 @@ def create_device_models(devmodels_list):
 
 
 def load_devices_yaml(fpath):
+    """ Carregar os dispositivos a partir de um dado ficheiro .yaml """
     with open(fpath) as f:
         data = yaml.safe_load(f)
     return data['devices']
 
+# Uso da função com o ficheiro devices.yml onde foi feito um inventário dos dispositivos da rede.
 devices_list = load_devices_yaml("devices.yml")
 
 def import_devices_to_netbox(device_list):
+    """ Importação dos dispositivos para o netbox, com verificação de existência das características """
     for d in device_list:
         site_obj = nb.dcim.sites.get(name=d['site'])
         role_obj = nb.dcim.device_roles.get(name=d['role'])
@@ -124,6 +139,7 @@ vlans = [
 ]
 
 def create_vlans(vlan_list):
+    """ Importação de VLANs para o Netbox , com verificação da localização """
     for v in vlan_list:
         site_obj = nb.dcim.sites.get(name=v['site'])
         
@@ -143,6 +159,7 @@ def create_vlans(vlan_list):
 
 
 def load_prefixes_from_yaml(filepath):
+    """ Carrega subnets a partir de um ficheiro yaml """
     try:
         with open(filepath) as file:
             data = yaml.safe_load(file)
@@ -153,10 +170,11 @@ def load_prefixes_from_yaml(filepath):
     except Exception as e:
         print(f"Erro ao processar o YAML: {e}")
         return []
-    
+
 prefixes = load_prefixes_from_yaml("prefixes.yml")
 
 def create_prefixes(prefix_list):
+    """ Importa os prefixes da lista, que foi criada com a função anterior, para o Netbox """
     for p in prefix_list:
         site_obj = nb.dcim.sites.get(name=p['site'])
         
@@ -184,6 +202,7 @@ def create_prefixes(prefix_list):
 
 
 def import_connections_from_yaml(path):
+    """ Importa as conexões de um dado ficheiro yaml e importa-as para o Netbox """
     with open(path) as file:
         data = yaml.safe_load(file)
 
@@ -230,6 +249,7 @@ def import_connections_from_yaml(path):
 
 
 def import_ips_from_yaml(filepath):
+    """ Carrega os endereços IPs das máquinas a partir de um dado ficheiro yaml e importa diretamente para o Netbox """
     with open(filepath) as file:
         data = yaml.safe_load(file)
 
@@ -259,6 +279,7 @@ def import_ips_from_yaml(filepath):
 
 
 def import_vips_from_yaml(filepath):
+    """ Carrega os endereços de IP virtuais de um dado ficheiro yaml e importa para o Netbox """
     with open(filepath) as file:
         data = yaml.safe_load(file)
 
@@ -282,6 +303,7 @@ def import_vips_from_yaml(filepath):
 
 
 if __name__ == "__main__":
+    """ Chama as funções com os ficheiros povoados à priori """
     create_sites(sites)
     create_device_roles(roles)
     create_manufacturers(manufacturer)
