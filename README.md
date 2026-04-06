@@ -117,6 +117,31 @@ Docker
 
     Flexibilidade: Topologia escalável através de ficheiros de configuração agnósticos ao código.
 
+🚀 Roadmap & Futuras Implementações
+
+O projeto foi desenhado para ser modular, permitindo a expansão para um ecossistema completo de NetDevOps. As próximas fases de desenvolvimento incluem:
+Fase 1: Observabilidade & Monitorização (TIG Stack)
+
+    Telegraf: Implementação de agentes para recolha de métricas via SNMP e gNMI.
+
+    InfluxDB: Armazenamento de telemetria em base de dados de séries temporais.
+
+    Grafana: Criação de dashboards dinâmicos para visualização de tráfego, estado de adjacências OSPF e saúde dos nós em tempo real.
+
+Fase 2: Gestão de Configuração com Ansible
+
+    Substituição da injeção de comandos por Ansible Playbooks.
+
+    Utilização do NetBox como Dynamic Inventory, permitindo que o Ansible saiba automaticamente quais dispositivos configurar.
+
+    Uso de templates Jinja2 para garantir que as configurações seguem um padrão institucional rígido.
+
+Fase 3: Pipeline de CI/CD (GitHub Actions)
+
+    Automação do fluxo de trabalho: qualquer alteração nos ficheiros YAML ou no código dispara um deploy automático no laboratório.
+
+    Continuous Testing: Integração do script de validação na pipeline; o código só é considerado "aprovado" se todos os testes de conectividade passarem.
+
 👤 Autor
 
 Daniel Veloso * LinkedIn: daniel-veloso-it
