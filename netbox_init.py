@@ -1,9 +1,22 @@
 import pynetbox
 import yaml
+import os
+import sys
 
-NETBOX_URL = "http://localhost:8000/"
-TOKEN = "d09g7LUzFUKHmfGu03ckK9GCPQMT9M2Sx9V9uQMo"
+NETBOX_URL = os.getenv("NETBOX_URL")
+TOKEN = os.getenv("NETBOX_TOKEN")
+
+if not TOKEN or not NETBOX_URL:
+    print("❌ Erro: As variáveis de ambiente NETBOX_URL e NETBOX_TOKEN não estão definidas.")
+    sys.exit(1)
+
 nb = pynetbox.api(NETBOX_URL, token=TOKEN)
+
+"""
+Módulo de Inicialização do NetBox.
+Este script é responsável por popular a 'Source of Truth' com a estrutura 
+hierárquica de rede, dispositivos e endereçamento IP.
+"""
 
 sites = ["Office A", "Office B"]
 
