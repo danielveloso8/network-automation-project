@@ -1,7 +1,20 @@
-import pynetbox, subprocess, yaml, time
+import pynetbox, subprocess, yaml, time, os, sys
 
-# Ligação ao NetBox
-nb = pynetbox.api("http://localhost:8000/", token="d09g7LUzFUKHmfGu03ckK9GCPQMT9M2Sx9V9uQMo")
+NETBOX_URL = os.getenv("NETBOX_URL")
+TOKEN = os.getenv("NETBOX_TOKEN")
+
+if not TOKEN or not NETBOX_URL:
+    print("❌ Erro: Variáveis de ambiente de API não encontradas.")
+    sys.exit(1)
+
+nb = pynetbox.api(NETBOX_URL, token=TOKEN)
+
+"""
+Script de Sincronização NetBox-to-Lab.
+Este módulo automatiza a configuração de interfaces, IPs e protocolos 
+de roteamento (OSPF) nos nós FRRouting, garantindo a paridade entre 
+o estado pretendido (NetBox) e o estado real (Laboratório).
+"""
 
 def get_mapping():
     with open("connections.yml", "r") as f:
