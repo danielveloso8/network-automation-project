@@ -107,6 +107,15 @@ Docker
 
     python3 verify_network.py
 
+## 📸 Demonstração do Projeto
+
+| Passo | Descrição | Screenshot |
+| :--- | :--- | :--- |
+| **1. Inventário** | População do NetBox via Python | ![NetBox](assets/screenshots/01-netbox-init.png) |
+| **2. Laboratório** | Containerlab Deploy OK | ![Clab](assets/screenshots/03-clab-deploy.png) |
+| **3. Automação** | Sincronização de IPs e OSPF | ![Sync](assets/screenshots/04-sync-config.png) |
+| **4. Validação** | Testes de conectividade ✅ | ![Verify](assets/screenshots/05-validation.png) |
+
 💡 Key Features Implementadas
 
     Mapeamento Inteligente: Tradução automática de interfaces Cisco para nomes nativos do Linux (ethX).
