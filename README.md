@@ -1,38 +1,38 @@
 # Network Automation Framework: NetBox + Containerlab + FRR
 
-Este projeto demonstra a implementação de uma metodologia **Infrastructure as Code (IaC)** para a automação de infraestruturas de rede. Utiliza o **NetBox** como a *Single Source of Truth* para gerir o ciclo de vida completo de uma rede virtualizada simulada, desde o inventário até à validação de conectividade.
+This project demonstrates the implementation of an Infrastructure as Code (IaC) methodology for network infrastructure automation. It utilizes NetBox as the Single Source of Truth (SSoT) to manage the full lifecycle of a simulated virtualized network, from inventory management to connectivity validation.
 
-## Visão Geral
-A solução resolve o problema de inconsistência de configurações através da automação de quatro pilares:
-1.  **Inventário Dinâmico:** Sincronização automática de dados YAML com a API do NetBox.
-2.  **Orquestração de Topologia:** Geração programática de cenários de laboratório baseados em grafos de conectividade.
-3.  **Provisionamento Idempotente:** Configuração de interfaces, VLANs e protocolos de routing (OSPF) via Python.
-4.  **Continuous Verification:** Testes automatizados para garantir o estado pretendido da rede.
+## Overview
+The solution addresses configuration inconsistency issues through the automation of four key pillars:
+1. Dynamic Inventory: Automatic synchronization of YAML data with the NetBox API.
+2. Topology Orchestration: Programmatic generation of lab scenarios based on connectivity graphs.
+3. Idempotent Provisioning: Automated configuration of interfaces, VLANs, and routing protocols (OSPF) via Python.
+4. Continuous Verification: Automated testing to ensure the network reaches its intended state.
 
 ---
 
-## Fluxo de Trabalho (Pipeline de Automação)
+## Workflow (Automation Pipeline)
 
-O diagrama abaixo ilustra a interação entre as ferramentas e o fluxo de dados no ecossistema:
+The diagram below illustrates the interaction between tools and the data flow within the ecosystem:
 
 ```mermaid
 graph TD
-    %% Fontes de Dados
-    subgraph SSoT [Fontes de Dados YAML]
+    %% Data Sources
+    subgraph SSoT [YAML Data Sources]
         Y1[devices.yml]
         Y2[connections.yml]
         Y3[ips.yml]
     end
 
-    %% Processamento
-    subgraph Logic [Scripts de Automação]
+    %% Processing
+    subgraph Logic [Automating Scripts]
         S1[netbox_init.py]
         S2[generate_clab.py]
         S3[sync_netbox_lab.py]
     end
 
-    %% Destinos
-    subgraph Infrastructure [Infraestrutura]
+    %% Target
+    subgraph Infrastructure [Infrastructure]
         NB[(NetBox API)]
         CL[Containerlab]
         FRR[FRRouting Nodes]
@@ -47,112 +47,112 @@ graph TD
     NB --> S3
     S3 --> FRR
     
-    FRR -->|Validação| V[verify_network.py]
+    FRR -->|Validation| V[verify_network.py]
     
     style NB fill:#f96,stroke:#333
     style CL fill:#69f,stroke:#333
     style V fill:#c8e6c9,stroke:#2e7d32
 ```
 
-🛠️ Stack Tecnológica
+🛠️ Technology Stack
 NetBox
 Containerlab
 FRRouting
 Python 3.x
 Docker
 
-📂 Estrutura do Projeto
+📂 Project Structure
 
-    - netbox_init.py: Inicializa o NetBox com sites, roles, modelos e IPs.
+    - netbox_init.py: Initializes NetBox with sites, roles, device models, and IP addresses.
 
-    - generate_clab.py: Gera o ficheiro de topologia projeto.clab.yml.
+    - generate_clab.py: Programmatically generates the projeto.clab.yml topology file.
 
-    - sync_netbox_lab.py: Sincroniza as configurações de IP e OSPF nos equipamentos ativos.
+    - sync_netbox_lab.py: Synchronizes IP and OSPF configurations across active network nodes.
 
-    - verify_network.py: Script de validação de vizinhança OSPF e testes de ICMP.
+    - verify_network.py: Validation script for OSPF neighbor adjacency and E2E ICMP tests.
 
-    - *.yml: Ficheiros de definição de rede (Inventário, Conexões, Prefixos).
+    - *.yml: Network definition files (Inventory, Connections, Prefixes).
 
-🚀 Como Executar
-1. Pré-requisitos
+🚀 How to run
+1. Prerequisites
 
-    Docker e Containerlab instalados.
+    Docker and Containerlab installed.
 
-    Instância do NetBox acessível via API.
+    A reachable Netbox instance via API.
 
-    Ambiente Python configurado:
+    Python environment configured:
     Bash
 
     pip install -r requirements.txt
 
-2. Passo a Passo
+2. Step-by-step execution
 
-    Popular o NetBox:
+    Populate NetBox:
     Bash
 
     python3 netbox_init.py
 
-    Levantar o Laboratório:
+    Deploy:
     Bash
 
     sudo clab deploy -t projeto.clab.yml
 
-    Configurar a Rede:
+    Network configuration:
     Bash
 
     python3 sync_netbox_lab.py
 
-    Validar Conectividade:
+    Connectivity validation:
     Bash
 
     python3 verify_network.py
 
-## 📸 Demonstração do Projeto
+## 📸 Project Demo
 
-| Passo | Descrição | Screenshot |
+| Step | Description | Screenshot |
 | :--- | :--- | :--- |
-| **1. Inventário** | População do NetBox via Python | ![NetBox](assets/screenshots/01-netbox-init.png) |
-| **2. Laboratório** | Containerlab Deploy OK | ![Clab](assets/screenshots/03-clab-deploy.png) |
-| **3. Automação** | Sincronização de IPs e OSPF | ![Sync](assets/screenshots/04-sync-config.png) |
-| **4. Validação** | Testes de conectividade ✅ | ![Verify](assets/screenshots/05-validation.png) |
+| **1. Inventory** | Populating Netbox via API | ![NetBox](assets/screenshots/01-netbox-init.png) |
+| **2. Lab** | Containerlab Deploy OK | ![Clab](assets/screenshots/03-clab-deploy.png) |
+| **3. Automation** | IPs and OSPF Synchronization | ![Sync](assets/screenshots/04-sync-config.png) |
+| **4. Validation** | Conectivity tests ✅ | ![Verify](assets/screenshots/05-validation.png) |
 
-💡 Key Features Implementadas
+💡 Key Features
 
-    Mapeamento Inteligente: Tradução automática de interfaces Cisco para nomes nativos do Linux (ethX).
+    Intelligent Mapping: Automatic translation of Cisco-style interface names (e.g., GigabitEthernet) to native Linux names (ethX).
 
-    OSPF Dinâmico: Ativação automática de áreas OSPF baseada na função de cada interface e Router-ID dinâmico.
+    Dynamic OSPF: Automated activation of OSPF areas based on interface roles and dynamic Router-IDs.
 
-    Isolamento de Erros: Gestão de ficheiros PID e locks de processos FRR para garantir estabilidade operacional.
+    Error Isolation: Management of PID files and FRR process locks to ensure operational stability.
 
-    Flexibilidade: Topologia escalável através de ficheiros de configuração agnósticos ao código.
+    Flexibility: Scalable topology through code-agnostic configuration files.
 
-🚀 Roadmap & Futuras Implementações
+🚀 Roadmap & Future Implementations
 
-O projeto foi desenhado para ser modular, permitindo a expansão para um ecossistema completo de NetDevOps. As próximas fases de desenvolvimento incluem:
-Fase 1: Observabilidade & Monitorização (TIG Stack)
+This project is modular by design, allowing expansion into a complete NetDevOps ecosystem:
+Phase 1: Observability & Monitoring (TIG Stack)
 
-    Telegraf: Implementação de agentes para recolha de métricas via SNMP e gNMI.
+    Telegraf: Implement agents for metric collection via SNMP and gNMI.
 
-    InfluxDB: Armazenamento de telemetria em base de dados de séries temporais.
+    InfluxDB: Store telemetry in a Time Series Database.
 
-    Grafana: Criação de dashboards dinâmicos para visualização de tráfego, estado de adjacências OSPF e saúde dos nós em tempo real.
+    Grafana: Create dynamic dashboards for real-time visualization of traffic, OSPF adjacency states, and node health.
 
-Fase 2: Gestão de Configuração com Ansible
+Phase 2: Configuration Management with Ansible
 
-    Substituição da injeção de comandos por Ansible Playbooks.
+    Replace direct command injection with Ansible Playbooks.
 
-    Utilização do NetBox como Dynamic Inventory, permitindo que o Ansible saiba automaticamente quais dispositivos configurar.
+    Use NetBox as a Dynamic Inventory for automated device discovery.
 
-    Uso de templates Jinja2 para garantir que as configurações seguem um padrão institucional rígido.
+    Implement Jinja2 templates to enforce strict institutional configuration standards.
 
 Fase 3: Pipeline de CI/CD (GitHub Actions)
 
-    Automação do fluxo de trabalho: qualquer alteração nos ficheiros YAML ou no código dispara um deploy automático no laboratório.
+    Workflow Automation: Any change in YAML files or code triggers an automatic lab redeploy.
 
-    Continuous Testing: Integração do script de validação na pipeline; o código só é considerado "aprovado" se todos os testes de conectividade passarem.
+    Continuous Testing: Integrate the validation script into the pipeline; code is only "approved" if all connectivity tests pass.
 
-👤 Autor
+👤 Author
 
 Daniel Veloso * LinkedIn: daniel-veloso-it
 
-    Contacto: 912678262
+    Contact: 912678262
