@@ -7,7 +7,7 @@ NETBOX_URL = os.getenv("NETBOX_URL")
 TOKEN = os.getenv("NETBOX_TOKEN")
 
 if not TOKEN or not NETBOX_URL:
-    print("❌ Erro: As variáveis de ambiente NETBOX_URL e NETBOX_TOKEN não estão definidas.")
+    print("As variáveis de ambiente NETBOX_URL e NETBOX_TOKEN não estão definidas.")
     sys.exit(1)
 
 # Inicialização da instância da API
@@ -35,8 +35,8 @@ device_models = [
     {"name": "C9300-24T", "manufacturer": "Cisco"},
     {"name": "C9800-CL", "manufacturer": "Cisco"}, 
     {"name": "C9120AXI", "manufacturer": "Cisco"},
-    {"name": "CP-7841", "manufacturer": "Cisco"},    # Telefone IP
-    {"name": "PowerEdge R740", "manufacturer": "Dell"}, # Servidor
+    {"name": "CP-7841", "manufacturer": "Cisco"},
+    {"name": "PowerEdge R740", "manufacturer": "Dell"},
     {"name": "Desktop PC", "manufacturer": "Generic"},
     {"name": "Laptop", "manufacturer": "Generic"}
 ]
